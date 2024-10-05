@@ -8,7 +8,7 @@ internal class Program
 		var path = "samples/one.json";
 		var encodedSettings = EncodeSettings(path);
 
-		var expectedEncodings = "_11_D0S1___0011001";
+		var expectedEncodings = "M11MD0S1MMM0011001";
 		Console.WriteLine($"Ordinal 01: Actual/Expected = {encodedSettings[00]}/{expectedEncodings[00]} | Match: {(encodedSettings[00] == expectedEncodings[00] ? 1 : 0)} | 'data-source-files'");
 		Console.WriteLine($"Ordinal 02: Actual/Expected = {encodedSettings[01]}/{expectedEncodings[01]} | Match: {(encodedSettings[01] == expectedEncodings[01] ? 1 : 0)} | 'runtime.rest.enabled'");
 		Console.WriteLine($"Ordinal 03: Actual/Expected = {encodedSettings[02]}/{expectedEncodings[02]} | Match: {(encodedSettings[02] == expectedEncodings[02] ? 1 : 0)} | 'runtime.graphql.enabled'");
@@ -56,7 +56,7 @@ internal class Program
 			{
 				"production" => 'P',
 				"development" => 'D',
-				_ => '_' // Return '_' for any unexpected values
+				_ => '!' // Return '!' for any unexpected values
 			};
 
 			var ordinal06 = root.GetConfigurationProperty("runtime.host.cors.allow-credentials").EncodeToBoolean();
@@ -70,7 +70,7 @@ internal class Program
 				"EntraId" => 'E',
 				"Oauth" => 'O',
 				"None" => 'N',
-				null => '_',
+				null => 'M',
 				_ => '!'
 			};
 
@@ -258,7 +258,7 @@ file static class Extensions
 			if (value <= 9) return value.ToString()[0];
 			return 'Z'; // More than 9
 		}
-		return '_'; // Missing or invalid type
+		return 'M'; // Missing or invalid type
 	}
 
 	public static char EncodeToBigCount(this JsonElement element)
@@ -275,7 +275,7 @@ file static class Extensions
 		}
 		else if (element.ValueKind == JsonValueKind.Null || element.ValueKind == JsonValueKind.Undefined)
 		{
-			return '_'; // Missing
+			return 'M'; // Missing
 		}
 		else
 		{
@@ -284,7 +284,7 @@ file static class Extensions
 
 		return count switch
 		{
-			0 => '0',
+			0 => 'M',
 			_ when count.Between(1, 9) => '0',
 			_ when count.Between(10, 19) => '1',
 			_ when count.Between(20, 29) => '2',
@@ -320,7 +320,7 @@ file static class Extensions
 		}
 		else if (element.ValueKind == JsonValueKind.Null || element.ValueKind == JsonValueKind.Undefined)
 		{
-			return '_'; // Missing
+			return 'M'; // Missing
 		}
 
 		return '!'; // Error or unknown type
@@ -348,7 +348,7 @@ file static class Extensions
 		}
 		else if (element.ValueKind == JsonValueKind.Null || element.ValueKind == JsonValueKind.Undefined)
 		{
-			return '_'; // Missing
+			return 'M'; // Missing
 		}
 
 		return '!'; // Error or unknown type
