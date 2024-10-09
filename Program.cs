@@ -70,11 +70,11 @@ internal class Program
 
             var ordinal12 = root.GetConfigurationProperty("runtime.telemetry.application-insights.enabled").EncodeToBoolean();
 
-			var ordinal13 = root.GetProperty("entities").EnumerateObject().Count() switch
-			{
-				var x when x < 9 => (char)(x + '0'), // Less than 9
-				_ => 'A' // 9 or more
-			};
+            var ordinal13 = root.GetProperty("entities").EnumerateObject().Count() switch
+            {
+            	var x when x < 9 => (char)(x + '0'), // Less than 9
+            	_ => 'A' // 9 or more
+            };
 
             var entities = root.GetAllEntities();
 
