@@ -247,7 +247,7 @@
 			"role": "anonymous",
 			"actions": [
 			  {
-				"action": "*"
+				"action": "*", "policy": { "database": "jerry" }
 			  }
 			]
 		  }

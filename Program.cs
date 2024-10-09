@@ -4,128 +4,143 @@ using System.Text.Json;
 internal class Program
 {
 	private static void Main(string[] args)
-	{
-		var path = "samples/one.json";
-		var encodedSettings = EncodeSettings(path);
+    {
+        var encodedSettings = EncodeSettings("samples/one.json");
+        var expectedEncodings = "M11MD0S1MMM0011001";
+        CompareValues(encodedSettings, expectedEncodings);
 
-		var expectedEncodings = "M11MD0S1MMM0011001";
-		Console.WriteLine($"Ordinal 01: Actual/Expected = {encodedSettings[00]}/{expectedEncodings[00]} | Match: {(encodedSettings[00] == expectedEncodings[00] ? 1 : 0)} | 'data-source-files'");
-		Console.WriteLine($"Ordinal 02: Actual/Expected = {encodedSettings[01]}/{expectedEncodings[01]} | Match: {(encodedSettings[01] == expectedEncodings[01] ? 1 : 0)} | 'runtime.rest.enabled'");
-		Console.WriteLine($"Ordinal 03: Actual/Expected = {encodedSettings[02]}/{expectedEncodings[02]} | Match: {(encodedSettings[02] == expectedEncodings[02] ? 1 : 0)} | 'runtime.graphql.enabled'");
-		Console.WriteLine($"Ordinal 04: Actual/Expected = {encodedSettings[03]}/{expectedEncodings[03]} | Match: {(encodedSettings[03] == expectedEncodings[03] ? 1 : 0)} | 'runtime.graphql.multiple-mutations.create.enabled'");
-		Console.WriteLine($"Ordinal 05: Actual/Expected = {encodedSettings[04]}/{expectedEncodings[04]} | Match: {(encodedSettings[04] == expectedEncodings[04] ? 1 : 0)} | 'runtime.host.mode'");
-		Console.WriteLine($"Ordinal 06: Actual/Expected = {encodedSettings[05]}/{expectedEncodings[05]} | Match: {(encodedSettings[05] == expectedEncodings[05] ? 1 : 0)} | 'runtime.host.cors.allow-credentials'");
-		Console.WriteLine($"Ordinal 07: Actual/Expected = {encodedSettings[06]}/{expectedEncodings[06]} | Match: {(encodedSettings[06] == expectedEncodings[06] ? 1 : 0)} | 'runtime.host.authentication.provider'");
-		Console.WriteLine($"Ordinal 08: Actual/Expected = {encodedSettings[07]}/{expectedEncodings[07]} | Match: {(encodedSettings[07] == expectedEncodings[07] ? 1 : 0)} | 'cache.enabled'");
-		Console.WriteLine($"Ordinal 09: Actual/Expected = {encodedSettings[08]}/{expectedEncodings[08]} | Match: {(encodedSettings[08] == expectedEncodings[08] ? 1 : 0)} | 'pagination.max-page-size'");
-		Console.WriteLine($"Ordinal 10: Actual/Expected = {encodedSettings[09]}/{expectedEncodings[09]} | Match: {(encodedSettings[09] == expectedEncodings[09] ? 1 : 0)} | 'pagination.default-page-size'");
-		Console.WriteLine($"Ordinal 11: Actual/Expected = {encodedSettings[10]}/{expectedEncodings[10]} | Match: {(encodedSettings[10] == expectedEncodings[10] ? 1 : 0)} | 'runtime.host.max-response-size-mb'");
-		Console.WriteLine($"Ordinal 12: Actual/Expected = {encodedSettings[11]}/{expectedEncodings[11]} | Match: {(encodedSettings[11] == expectedEncodings[11] ? 1 : 0)} | 'telemetry.application-insights.enabled'");
-		Console.WriteLine($"Ordinal 13: Actual/Expected = {encodedSettings[12]}/{expectedEncodings[12]} | Match: {(encodedSettings[12] == expectedEncodings[12] ? 1 : 0)} | 'Entities: count'");
-		Console.WriteLine($"Ordinal 14: Actual/Expected = {encodedSettings[13]}/{expectedEncodings[13]} | Match: {(encodedSettings[13] == expectedEncodings[13] ? 1 : 0)} | 'Entities: any use table'");
-		Console.WriteLine($"Ordinal 15: Actual/Expected = {encodedSettings[14]}/{expectedEncodings[14]} | Match: {(encodedSettings[14] == expectedEncodings[14] ? 1 : 0)} | 'Entities: any use view'");
-		Console.WriteLine($"Ordinal 16: Actual/Expected = {encodedSettings[15]}/{expectedEncodings[15]} | Match: {(encodedSettings[15] == expectedEncodings[15] ? 1 : 0)} | 'Entities: any use stored procedures'");
-		Console.WriteLine($"Ordinal 17: Actual/Expected = {encodedSettings[16]}/{expectedEncodings[16]} | Match: {(encodedSettings[16] == expectedEncodings[16] ? 1 : 0)} | 'Entities: any use policies'");
-		Console.WriteLine($"Ordinal 18: Actual/Expected = {encodedSettings[17]}/{expectedEncodings[17]} | Match: {(encodedSettings[17] == expectedEncodings[17] ? 1 : 0)} | 'Entities: any use cache'");
-		Console.Read();
+        encodedSettings = EncodeSettings("samples/two.json");
+        expectedEncodings = "M11MD0S1MMM0011001";
+        CompareValues(encodedSettings, expectedEncodings);
 
-		static string EncodeSettings(string path)
-		{
-			var text = File.ReadAllText(path);
+        Console.Read();
 
-			// Parse the JSON and get the root element
-			var jsonDocument = JsonDocument.Parse(text);
-			JsonElement root = jsonDocument.RootElement;
+        static string EncodeSettings(string path)
+        {
+            var text = File.ReadAllText(path);
 
-			var defaults = new Dictionary<string, object>
-			{
-				{"pagination.max-page-size", 100000},
-				{"pagination.default-page-size", 100},
-				{"runtime.host.max-response-size-mb", 158}
-			};
+            // Parse the JSON and get the root element
+            var jsonDocument = JsonDocument.Parse(text);
+            JsonElement root = jsonDocument.RootElement;
 
-			var ordinal01 = root.GetConfigurationProperty("data-source-files").EncodeToSmallCount();
+            var defaults = new Dictionary<string, object>
+            {
+                {"pagination.max-page-size", 100000},
+                {"pagination.default-page-size", 100},
+                {"runtime.host.max-response-size-mb", 158}
+            };
 
-			var ordinal02 = root.GetConfigurationProperty("runtime.rest.enabled").EncodeToBoolean();
+            var ordinal01 = root.GetConfigurationProperty("data-source-files").EncodeToSmallCount();
 
-			var ordinal03 = root.GetConfigurationProperty("runtime.graphql.enabled").EncodeToBoolean();
+            var ordinal02 = root.GetConfigurationProperty("runtime.rest.enabled").EncodeToBoolean();
 
-			var ordinal04 = root.GetConfigurationProperty("runtime.graphql.multiple-mutations.create.enabled").EncodeToBoolean();
+            var ordinal03 = root.GetConfigurationProperty("runtime.graphql.enabled").EncodeToBoolean();
 
-			var ordinal05 = root.GetConfigurationProperty("runtime.host.mode").GetString() switch
-			{
-				"production" => 'P',
-				"development" => 'D',
-				_ => '!' // Return '!' for any unexpected values
-			};
+            var ordinal04 = root.GetConfigurationProperty("runtime.graphql.multiple-mutations.create.enabled").EncodeToBoolean();
 
-			var ordinal06 = root.GetConfigurationProperty("runtime.host.cors.allow-credentials").EncodeToBoolean();
+            var ordinal05 = root.GetConfigurationProperty("runtime.host.mode").GetString() switch
+            {
+                "production" => 'P',
+                "development" => 'D',
+                _ => '!' // Return '!' for any unexpected values
+            };
 
-			var ordinal07 = root.GetConfigurationProperty("runtime.host.authentication.provider").GetString() switch
-			{
-				"StaticWebApps" => 'S',
-				"AppService" => 'A',
-				"AzureId" => 'Z',
-				"Simulator" => 'D',
-				"EntraId" => 'E',
-				"Oauth" => 'O',
-				"None" => 'N',
-				null => 'M',
-				_ => '!'
-			};
+            var ordinal06 = root.GetConfigurationProperty("runtime.host.cors.allow-credentials").EncodeToBoolean();
 
-			var ordinal08 = root.GetConfigurationProperty("runtime.cache.enabled").EncodeToBoolean();
+            var ordinal07 = root.GetConfigurationProperty("runtime.host.authentication.provider").GetString() switch
+            {
+                "StaticWebApps" => 'S',
+                "AppService" => 'A',
+                "AzureId" => 'Z',
+                "Simulator" => 'D',
+                "EntraId" => 'E',
+                "Oauth" => 'O',
+                "None" => 'N',
+                null => 'M',
+                _ => '!'
+            };
 
-			var ordinal09 = root.GetConfigurationProperty("runtime.pagination.max-page-size").EncodeToCustom(defaults["pagination.max-page-size"]);
+            var ordinal08 = root.GetConfigurationProperty("runtime.cache.enabled").EncodeToBoolean();
 
-			var ordinal10 = root.GetConfigurationProperty("runtime.pagination.default-page-size").EncodeToCustom(defaults["pagination.default-page-size"]);
+            var ordinal09 = root.GetConfigurationProperty("runtime.pagination.max-page-size").EncodeToCustom(defaults["pagination.max-page-size"]);
 
-			var ordinal11 = root.GetConfigurationProperty("runtime.host.max-response-size-mb").EncodeToCustom(defaults["runtime.host.max-response-size-mb"]);
+            var ordinal10 = root.GetConfigurationProperty("runtime.pagination.default-page-size").EncodeToCustom(defaults["pagination.default-page-size"]);
 
-			var ordinal12 = root.GetConfigurationProperty("runtime.telemetry.application-insights.enabled").EncodeToBoolean();
+            var ordinal11 = root.GetConfigurationProperty("runtime.host.max-response-size-mb").EncodeToCustom(defaults["runtime.host.max-response-size-mb"]);
 
-			var ordinal13 = root.GetProperty("entities").EnumerateObject().Count() switch
-			{
+            var ordinal12 = root.GetConfigurationProperty("runtime.telemetry.application-insights.enabled").EncodeToBoolean();
+
+            var ordinal13 = root.GetProperty("entities").EnumerateObject().Count() switch
+            {
 				0 => '0', // No entities
 				1 => '1', // One entity
-				>= 2 and <= 9 => '0', // 2-9 entities
+				2 => '2',
+				3 => '3',
+				4 => '4',
+				5 => '5',
+				6 => '6',
+				7 => '7',
+				8 => '8',
+				9 => '9',
 				_ => 'A' // More than 9
-			};
+            };
 
-			var entities = root.GetAllEntities();
+            var entities = root.GetAllEntities();
 
-			var ordinal14 = entities.FindAny("source.type", "table") ? '1' : '0';
+            var ordinal14 = entities.FindAny("source.type", "table") ? '1' : '0';
 
-			var ordinal15 = entities.FindAny("source.type", "view") ? '1' : '0';
+            var ordinal15 = entities.FindAny("source.type", "view") ? '1' : '0';
 
-			var ordinal16 = entities.FindAny("source.type", "stored-procedure") ? '1' : '0';
+            var ordinal16 = entities.FindAny("source.type", "stored-procedure") ? '1' : '0';
 
-			var ordinal17 = entities.GetAllPolicies().Length != 0 ? '1' : '0';
+            var ordinal17 = entities.GetAllPolicies().Length != 0 ? '1' : '0';
 
-			var ordinal18 = entities.FindAny("cache.enabled", "true") ? '1' : '0';
+            var ordinal18 = entities.FindAny("cache.enabled", "true") ? '1' : '0';
 
-			var settingsBuilder = new StringBuilder();
-			settingsBuilder.Append(ordinal01);
-			settingsBuilder.Append(ordinal02);
-			settingsBuilder.Append(ordinal03);
-			settingsBuilder.Append(ordinal04);
-			settingsBuilder.Append(ordinal05);
-			settingsBuilder.Append(ordinal06);
-			settingsBuilder.Append(ordinal07);
-			settingsBuilder.Append(ordinal08);
-			settingsBuilder.Append(ordinal09);
-			settingsBuilder.Append(ordinal10);
-			settingsBuilder.Append(ordinal11);
-			settingsBuilder.Append(ordinal12);
-			settingsBuilder.Append(ordinal13);
-			settingsBuilder.Append(ordinal14);
-			settingsBuilder.Append(ordinal15);
-			settingsBuilder.Append(ordinal16);
-			settingsBuilder.Append(ordinal17);
-			settingsBuilder.Append(ordinal18);
-			return settingsBuilder.ToString();
-		}
-	}
+            var settingsBuilder = new StringBuilder();
+            settingsBuilder.Append(ordinal01);
+            settingsBuilder.Append(ordinal02);
+            settingsBuilder.Append(ordinal03);
+            settingsBuilder.Append(ordinal04);
+            settingsBuilder.Append(ordinal05);
+            settingsBuilder.Append(ordinal06);
+            settingsBuilder.Append(ordinal07);
+            settingsBuilder.Append(ordinal08);
+            settingsBuilder.Append(ordinal09);
+            settingsBuilder.Append(ordinal10);
+            settingsBuilder.Append(ordinal11);
+            settingsBuilder.Append(ordinal12);
+            settingsBuilder.Append(ordinal13);
+            settingsBuilder.Append(ordinal14);
+            settingsBuilder.Append(ordinal15);
+            settingsBuilder.Append(ordinal16);
+            settingsBuilder.Append(ordinal17);
+            settingsBuilder.Append(ordinal18);
+            return settingsBuilder.ToString();
+        }
+
+        static void CompareValues(string encodedSettings, string expectedEncodings)
+        {
+            Console.WriteLine($"Ordinal 01: Actual/Expected = {encodedSettings[00]}/{expectedEncodings[00]} | Match: {(encodedSettings[00] == expectedEncodings[00] ? 1 : 0)} | 'data-source-files'");
+            Console.WriteLine($"Ordinal 02: Actual/Expected = {encodedSettings[01]}/{expectedEncodings[01]} | Match: {(encodedSettings[01] == expectedEncodings[01] ? 1 : 0)} | 'runtime.rest.enabled'");
+            Console.WriteLine($"Ordinal 03: Actual/Expected = {encodedSettings[02]}/{expectedEncodings[02]} | Match: {(encodedSettings[02] == expectedEncodings[02] ? 1 : 0)} | 'runtime.graphql.enabled'");
+            Console.WriteLine($"Ordinal 04: Actual/Expected = {encodedSettings[03]}/{expectedEncodings[03]} | Match: {(encodedSettings[03] == expectedEncodings[03] ? 1 : 0)} | 'runtime.graphql.multiple-mutations.create.enabled'");
+            Console.WriteLine($"Ordinal 05: Actual/Expected = {encodedSettings[04]}/{expectedEncodings[04]} | Match: {(encodedSettings[04] == expectedEncodings[04] ? 1 : 0)} | 'runtime.host.mode'");
+            Console.WriteLine($"Ordinal 06: Actual/Expected = {encodedSettings[05]}/{expectedEncodings[05]} | Match: {(encodedSettings[05] == expectedEncodings[05] ? 1 : 0)} | 'runtime.host.cors.allow-credentials'");
+            Console.WriteLine($"Ordinal 07: Actual/Expected = {encodedSettings[06]}/{expectedEncodings[06]} | Match: {(encodedSettings[06] == expectedEncodings[06] ? 1 : 0)} | 'runtime.host.authentication.provider'");
+            Console.WriteLine($"Ordinal 08: Actual/Expected = {encodedSettings[07]}/{expectedEncodings[07]} | Match: {(encodedSettings[07] == expectedEncodings[07] ? 1 : 0)} | 'cache.enabled'");
+            Console.WriteLine($"Ordinal 09: Actual/Expected = {encodedSettings[08]}/{expectedEncodings[08]} | Match: {(encodedSettings[08] == expectedEncodings[08] ? 1 : 0)} | 'pagination.max-page-size'");
+            Console.WriteLine($"Ordinal 10: Actual/Expected = {encodedSettings[09]}/{expectedEncodings[09]} | Match: {(encodedSettings[09] == expectedEncodings[09] ? 1 : 0)} | 'pagination.default-page-size'");
+            Console.WriteLine($"Ordinal 11: Actual/Expected = {encodedSettings[10]}/{expectedEncodings[10]} | Match: {(encodedSettings[10] == expectedEncodings[10] ? 1 : 0)} | 'runtime.host.max-response-size-mb'");
+            Console.WriteLine($"Ordinal 12: Actual/Expected = {encodedSettings[11]}/{expectedEncodings[11]} | Match: {(encodedSettings[11] == expectedEncodings[11] ? 1 : 0)} | 'telemetry.application-insights.enabled'");
+            Console.WriteLine($"Ordinal 13: Actual/Expected = {encodedSettings[12]}/{expectedEncodings[12]} | Match: {(encodedSettings[12] == expectedEncodings[12] ? 1 : 0)} | 'Entities: count'");
+            Console.WriteLine($"Ordinal 14: Actual/Expected = {encodedSettings[13]}/{expectedEncodings[13]} | Match: {(encodedSettings[13] == expectedEncodings[13] ? 1 : 0)} | 'Entities: any use table'");
+            Console.WriteLine($"Ordinal 15: Actual/Expected = {encodedSettings[14]}/{expectedEncodings[14]} | Match: {(encodedSettings[14] == expectedEncodings[14] ? 1 : 0)} | 'Entities: any use view'");
+            Console.WriteLine($"Ordinal 16: Actual/Expected = {encodedSettings[15]}/{expectedEncodings[15]} | Match: {(encodedSettings[15] == expectedEncodings[15] ? 1 : 0)} | 'Entities: any use stored procedures'");
+            Console.WriteLine($"Ordinal 17: Actual/Expected = {encodedSettings[16]}/{expectedEncodings[16]} | Match: {(encodedSettings[16] == expectedEncodings[16] ? 1 : 0)} | 'Entities: any use policies'");
+            Console.WriteLine($"Ordinal 18: Actual/Expected = {encodedSettings[17]}/{expectedEncodings[17]} | Match: {(encodedSettings[17] == expectedEncodings[17] ? 1 : 0)} | 'Entities: any use cache'");
+        }
+    }
 }
 
 file static class Extensions
